@@ -27,9 +27,11 @@ func main() {
 	s3SecretAccessKey := os.Getenv("S3secretAccessKey")
 	s3Region := os.Getenv("S3Region")
 
+	secretKey := os.Getenv("SYSTEM_SECRET")
+
 	s3Provider := uploadprovider.NewS3Provider(s3BucketName, s3Endpoint, s3AccessKeyID, s3SecretAccessKey, s3Region)
 
-	appContext := appctx.NewAppContext(db, s3Provider)
+	appContext := appctx.NewAppContext(db, s3Provider, secretKey)
 	r := gin.Default()
 	r.Use(middleware.Recover(appContext))
 
@@ -39,6 +41,10 @@ func main() {
 	v1.POST("/upload", ginupload.Upload(appContext))
 
 	v1.POST("/register", ginuser.Register(appContext))
+
+	v1.POST("/authenticate", ginuser.Login(appContext))
+
+	v1.GET("/profile", middleware.RequireAuth(appContext), ginuser.Profile(appContext))
 
 	restaurants := v1.Group("/restaurants")
 
