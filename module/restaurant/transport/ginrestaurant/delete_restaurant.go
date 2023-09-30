@@ -12,6 +12,7 @@ import (
 func DeleteRestaurant(appCtx appctx.AppContext) func(c *gin.Context) {
 	return func(c *gin.Context) {
 		db := appCtx.GetMainDBConnection()
+		requester := c.MustGet(common.CurrentUser).(common.Requester)
 		//id, err := strconv.Atoi(c.Param("id"))
 
 		uid, err := common.FromBase58(c.Param("id"))
@@ -21,7 +22,7 @@ func DeleteRestaurant(appCtx appctx.AppContext) func(c *gin.Context) {
 		}
 
 		store := restaurantstorage.NewSQLStore(db)
-		biz := retaurantbiz.NewDeleteRestaurantBiz(store)
+		biz := retaurantbiz.NewDeleteRestaurantBiz(store, requester)
 
 		if err := biz.DeleteRestaurant(c.Request.Context(), int(uid.GetLocalID())); err != nil {
 			panic(err)
