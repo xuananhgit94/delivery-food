@@ -33,9 +33,9 @@ func main() {
 	r.Use(middleware.Recover(appContext))
 
 	// POST /restaurants
-	v1 := r.Group("/v1", middleware.RequireAuth(appContext))
+	v1 := r.Group("/v1")
 
-	setupRoute(appContext, v1)
+	setupRoute(appContext, v1, middleware.RequireAuth(appContext))
 	setupAdmin(appContext, v1)
 
 	r.Run()

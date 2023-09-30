@@ -12,8 +12,8 @@ func (s *sqlStore) ListDataWithCondition(context context.Context, filter *restau
 	db := s.db.Table(restaurantmodel.Restaurant{}.TableName())
 
 	if f := filter; f != nil {
-		if f.OwnerId > 0 {
-			db = db.Where("user_id = ?", f.OwnerId)
+		if f.UserId > 0 {
+			db = db.Where("user_id = ?", f.UserId)
 		}
 		if len(f.Status) > 0 {
 			db.Where("status in (?)", f.Status)
