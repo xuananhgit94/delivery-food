@@ -12,8 +12,8 @@ type UserLikeRestaurantStore interface {
 	Create(ctx context.Context, data *restaurantlikemodel.Like) error
 }
 
-//type IncLikedCountResStore interface {
-//	IncreaseLikeCount(ctx context.Context, id int) error
+//type IncLikedCoutResStore interface {
+//	IncreaseLikeCounnt(ctx context.Context, id int) error
 //}
 
 type userLikeRestaurantBiz struct {

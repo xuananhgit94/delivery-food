@@ -1,0 +1,47 @@
+<!doctype html>
+<head>
+    <title>Demo socket xuan anh</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.4.8/socket.io.js"></script>
+</head>
+
+<body>
+<div id="main">
+    <h1>Demo Socket IO</h1>
+</div>
+
+<script>
+    const socket = io("", {transports: ['websocket']})
+    var lockTimer = null
+    socket.on('connect', () => {
+        console.log('Client connected')
+        // i = 0
+        // lockTimer = setInterval(() => {
+        //     console.log('test', i)
+        //     socket.emit('test', i++)
+        // }, 1000)
+
+        // socket.emit('notice', {name: "Xuan Anh", age: 15})
+        socket.emit('authenticated', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7InVzZXJfaWQiOjEsInJvbGUiOiJ1c2VyIn0sImV4cCI6MTY5ODMyOTM5MywiaWF0IjoxNjk1NzM3MzkzfQ.kG7L2RKCjxwrTf19isjDs7dfp2jwMzczAR_7hzyU-XM')
+    })
+
+    if (lockTimer != null) {
+        clearInterval(lockTimer)
+    }
+
+    // lockTimer = setInterval(() => {
+    //     socket.emit('UserUpdateLocation', {lat: 10.7900422, lng: 106.6623443})
+    // }, 3000)
+    // socket.on('test', (msg) => console.log("test:", msg))
+    // socket.on('notice', (p) => console.log("notice:",p))
+
+    socket.on('authenticated', (msg) => {
+        console.log('your profile',msg)
+    })
+
+    socket.on('TopicUserLikeRestaurant', (data) => console.log('TopicUserLikeRestaurant:', data))
+
+
+    socket.on('disconnect', () => console.log('Socket is disconnected'))
+</script>
+
+</body>

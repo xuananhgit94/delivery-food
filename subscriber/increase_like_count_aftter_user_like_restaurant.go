@@ -9,7 +9,7 @@ import (
 
 type HasRestaurantId interface {
 	GetRestaurantId() int
-	//GetUserId() int
+	GetUserId() int
 }
 
 //func IncreaseLikeCountAfterUserLikeRestaurant(appCtx appctx.AppContext, ctx context.Context) {
@@ -34,6 +34,20 @@ func IncreaseLikeCountAfterUserLikeRestaurant(appCtx appctx.AppContext) consumer
 			store := restaurantstorage.NewSQLStore(appCtx.GetMainDBConnection())
 			likeData := message.Data().(HasRestaurantId)
 			return store.IncreaseLikeCount(ctx, likeData.GetRestaurantId())
+		},
+	}
+}
+
+func EmitRealtimeAfterUserLikeRestaurant(appCtx appctx.AppContext) consumerJob {
+	return consumerJob{
+		Title: "Realtime emit after user likes restaurant",
+		Hld: func(ctx context.Context, message *pubsub.Message) error {
+			likeData := message.Data().(HasRestaurantId)
+			err := appCtx.GetRealtimeEngine().EmitToUser(likeData.GetUserId(), string(message.Channel()), likeData)
+			if err != nil {
+				return err
+			}
+			return nil
 		},
 	}
 }
